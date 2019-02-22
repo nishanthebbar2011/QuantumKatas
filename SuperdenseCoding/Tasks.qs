@@ -45,6 +45,8 @@ namespace Quantum.Kata.SuperdenseCoding {
         AssertIntEqual(Length(qs), 2, "The array should have exactly 2 qubits.");
 
         // ...
+		H(qs[0]);
+		CNOT(qs[0], qs[1]);
     }
     
     
@@ -64,6 +66,14 @@ namespace Quantum.Kata.SuperdenseCoding {
         // [1; 1]:    |Ψ⁻⟩ = (|01⟩ - |10⟩) / sqrt(2)
 
         // ...
+
+		if (message[0]){
+			Z(qAlice);
+		}
+
+		if (message[1]){
+			X(qAlice);
+		}
     }
     
     
@@ -78,9 +88,19 @@ namespace Quantum.Kata.SuperdenseCoding {
         // Declare a Bool array in which the result will be stored;
         // the array has to be mutable to allow updating its elements.
         mutable decoded_bits = new Bool[2];
-        
+        set decoded_bits[0] = false;
+		set decoded_bits[1] = false;
         // ...
+		CNOT(qAlice, qBob);
+		H(qAlice);
 
+		if (M(qAlice) == One){
+			set decoded_bits[0] = true;
+		}
+
+		if (M(qBob) == One){
+			set decoded_bits[1] = true;
+		}
         return decoded_bits;
     }
     
@@ -96,6 +116,14 @@ namespace Quantum.Kata.SuperdenseCoding {
         mutable decoded_bits = new Bool[2];
         
         // ...
+
+		using (qs = Qubit[2]) 
+		{
+			CreateEntangledPair(qs);
+			EncodeMessageInQubit(qs[0], message);
+			set decoded_bits = DecodeMessageFromQubits(qs[1], qs[0]);
+			ResetAll(qs);
+		}
 
         return decoded_bits;
     }
