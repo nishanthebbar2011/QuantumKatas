@@ -36,7 +36,13 @@ namespace Quantum.Kata.JointMeasurements {
     operation SingleQubitMeasurement (qs : Qubit[]) : Int {
         // Hint: Use two single-qubit measurements.
         // ...
-        return -1;
+
+		mutable first = M(qs[0]);
+		mutable second = M(qs[1]);
+        if (first == second){
+		return 0;
+		}
+		return 1;
     }
     
     
@@ -49,9 +55,13 @@ namespace Quantum.Kata.JointMeasurements {
     // The state of the qubits at the end of the operation should be the same as the starting state.
     operation ParityMeasurement (qs : Qubit[]) : Int {
         // ...
-        return -1;
-    }
-    
+		mutable flag = 0;
+
+		if (Measure ([PauliZ, PauliZ], qs) == One){
+			set flag = 1;
+		} 
+		 return flag;
+	}
     
     // Task 3. |0000⟩ + |1111⟩ or |0011⟩ + |1100⟩ ?
     // Input: Four qubits (stored in an array) which are guaranteed to be
@@ -62,7 +72,9 @@ namespace Quantum.Kata.JointMeasurements {
     // The state of the qubits at the end of the operation should be the same as the starting state.
     operation GHZOrGHZWithX (qs : Qubit[]) : Int {
         // ...
-        return -1;
+
+		return (Measure([PauliZ, PauliZ], qs[1..2]) == One)? 1| 0;
+        //sreturn -1;
     }
     
     
@@ -75,6 +87,7 @@ namespace Quantum.Kata.JointMeasurements {
     // The state of the qubits at the end of the operation should be the same as the starting state.
     operation GHZOrWState (qs : Qubit[]) : Int {
         // ...
+		return MeasureAllZ(qs) == Zero ? 0 | 1;
         return -1;
     }
     
@@ -88,6 +101,8 @@ namespace Quantum.Kata.JointMeasurements {
     // The state of the qubits at the end of the operation should be the same as the starting state.
     operation DifferentBasis (qs : Qubit[]) : Int {
         // ...
+
+		return Measure([PauliX, PauliX], qs) ? 0 |1;
         return -1;
     }
     
@@ -101,6 +116,10 @@ namespace Quantum.Kata.JointMeasurements {
     // You do not need to allocate extra qubits.
     operation ControlledX (qs : Qubit[]) : Unit {
         // ...
+
+		
+
+
     }
     
     
