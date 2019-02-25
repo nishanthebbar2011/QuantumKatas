@@ -33,6 +33,9 @@ namespace Quantum.Kata.SimonsAlgorithm {
         
         body (...) {
             // ...
+			for (i in 0 .. Length(x) - 1){
+				CNOT(x[i], y );
+			}
         }
         
         adjoint invert;
@@ -49,6 +52,9 @@ namespace Quantum.Kata.SimonsAlgorithm {
         
         body (...) {
             // ...
+			for (i in 1 .. Length(y) - 1){
+				CNOT(x[i - 1], y[i]);
+			}
         }
         
         adjoint invert;
@@ -70,6 +76,12 @@ namespace Quantum.Kata.SimonsAlgorithm {
             AssertIntEqual(Length(x), Length(A), "Arrays x and A should have the same length");
             
             // ...
+
+			for (i in 0 .. Length(x) - 1){
+				if (A[i] == 1){
+					CNOT(x[i], y);
+				}
+			}
         }
         
         adjoint invert;
@@ -95,6 +107,14 @@ namespace Quantum.Kata.SimonsAlgorithm {
             AssertIntEqual(Length(y), Length(A), "Arrays y and A should have the same length");
             
             // ...
+
+			for(i in 0 .. Length(y) - 1){
+				for (j in 0 .. Length(x) - 1){
+					if (A[i][j] == 1){
+					CNOT(x[j], y[i]);
+					}
+				}
+			}
         }
         
         adjoint invert;
@@ -114,6 +134,9 @@ namespace Quantum.Kata.SimonsAlgorithm {
         
         body (...) {
             // ...
+			for(i in 0 .. Length(query) - 1){
+				H(query[i]);
+			}
         }
         
         adjoint invert;
@@ -145,8 +168,39 @@ namespace Quantum.Kata.SimonsAlgorithm {
         // Declare an Int array in which the result will be stored;
         // the array has to be mutable to allow updating its elements.
         mutable b = new Int[N];
-        
+        mutable t = One;
         // ...
+
+		using ((x, y) = (Qubit[N], Qubit[N])){
+		
+			for(i in 0 .. N - 1){
+				H(x[i]);
+			}
+
+			Uf(x, y);
+
+			for (i in 0 .. N - 1){
+				set t = M(y[i]);
+			}
+
+			for(i in 0 .. N - 1){
+				H(x[i]);
+			}
+
+
+			for(i in 0 .. N - 1){
+				if(M(x[i]) == One){
+					set b[i] = 1;
+				}
+
+				else{
+					set b[i] = 0;
+				}
+			}
+
+			ResetAll(y);
+			ResetAll(x);
+		}
 
         return b;
     }
